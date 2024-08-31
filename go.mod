@@ -1,3 +1,3 @@
-module github.com/Irboxis/goList.git
+module github.com/Irboxis/goList
 
 go 1.22.4
