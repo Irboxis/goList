@@ -13,7 +13,7 @@ func TestNewIntSlice(t *testing.T) {
 	}
 
 	expected := []int{1, 2, 3, 4, 5}
-	for i, v := range intSlice.slice {
+	for i, v := range intSlice.Slice {
 		if v != expected[i] {
 			t.Errorf("Expected %d at index %d, got %d", expected[i], i, v)
 		}
