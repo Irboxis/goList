@@ -51,3 +51,17 @@ func indexCheck[T any](s *slice[T], index int) (int, error) {
 	}
 	return index, nil
 }
+
+// 将索引值转换为有效范围内的索引值
+func (s *slice[T]) indexCon(index int) int {
+	if index < 0 {
+		index += s.Length
+		if index < 0 {
+			return 0
+		}
+	} else if index > s.Length {
+		index = s.Length - 1
+	}
+
+	return index
+}
