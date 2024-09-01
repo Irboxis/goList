@@ -26,7 +26,7 @@ GoList 是一个用于处理切片的 Go 库，提供类似 JavaScript 数组方
     )
     
     func main() {
-    s := golist.NewSlice([]int{1, 2, 3, 4, 5})
+    s := golist.New([]int{1, 2, 3, 4, 5})
     
         // 添加元素
         err := s.Add(2, 10)
