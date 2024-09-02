@@ -53,3 +53,70 @@ func TestMerge(t *testing.T) {
 		})
 	}
 }
+
+func TestSliceFlat(t *testing.T) {
+	tests := []struct {
+		name      string
+		input     []any
+		deep      []int
+		expected  []any
+		expectErr bool
+	}{
+		{
+			name:      "Flat array with default depth (1)",
+			input:     []any{1, []any{2, 3}, 4},
+			deep:      []int{},
+			expected:  []any{1, 2, 3, 4},
+			expectErr: false,
+		},
+		{
+			name:      "Flat array with depth 2",
+			input:     []any{1, []any{2, []any{3, 4}}, 5},
+			deep:      []int{},
+			expected:  []any{1, 2, []any{3, 4}, 5},
+			expectErr: false,
+		},
+		{
+			name:      "Flat array with depth 2",
+			input:     []any{1, []any{2, []any{3, 4}}, 5},
+			deep:      []int{2},
+			expected:  []any{1, 2, 3, 4, 5},
+			expectErr: false,
+		},
+		{
+			name:      "Flat array with depth 0 (no flattening)",
+			input:     []any{1, []any{2, []any{3, 4}}, 5},
+			deep:      []int{0},
+			expected:  []any{1, []any{2, []any{3, 4}}, 5},
+			expectErr: false,
+		},
+		{
+			name:      "Invalid deep parameter (more than 1)",
+			input:     []any{1, 2, 3},
+			deep:      []int{1, 2},
+			expected:  nil,
+			expectErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var args []any
+			for _, v := range tt.input {
+				args = append(args, v)
+			}
+
+			s := New(args...)
+			result, err := s.Flat(tt.deep...)
+
+			if (err != nil) != tt.expectErr {
+				t.Errorf("Flat() error = %v, expectErr %v", err, tt.expectErr)
+				return
+			}
+
+			if !reflect.DeepEqual(result, tt.expected) {
+				t.Errorf("Flat() = %v, expected %v", result, tt.expected)
+			}
+		})
+	}
+}
