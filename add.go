@@ -1,27 +1,6 @@
 package goList
 
-// Add 在切片中的指定索引处插入一个元素。
-//
-// 索引可以是负值，在这种情况下，位置是相对于切片末尾计算的。如果索引超出范围（即小于 `-Length` 或大于 `Length`），则返回错误。
-//
-// 参数：
-//   - index：元素在切片中插入的位置，可以是负值。
-//   - element：要插入到指定索引处的元素。
-//
-// 返回：
-//   - 如果索引超出范围，则返回错误。否则，返回 nil。
-func (s *slice[T]) Add(index int, element T) error {
-	i, err := indexCheck(s, index)
-	if err != nil {
-		return err
-	}
-	s.Slice = append(s.Slice[:i], append([]T{element}, s.Slice[i:]...)...)
-	s.Length += 1
-
-	return nil
-}
-
-// AddAll 从切片中的指定索引开始插入多个元素。
+// Add 从切片中的指定索引开始插入一个或多个元素。
 //
 // 索引可以是负值，在这种情况下，位置是相对于切片末尾计算的。如果索引超出范围（即小于 `-Length` 或大于 `Length`），则返回错误。
 //
@@ -33,7 +12,7 @@ func (s *slice[T]) Add(index int, element T) error {
 //
 // 返回：
 //   - 如果索引超出范围，则返回错误。否则，返回 nil。
-func (s *slice[T]) AddAll(start int, elements ...T) error {
+func (s *list[T]) Add(start int, elements ...T) error {
 	i, err := indexCheck(s, start)
 	if err != nil {
 		return err
@@ -59,7 +38,7 @@ func (s *slice[T]) AddAll(start int, elements ...T) error {
 //
 // 参数：
 //   - elements：要追加到切片末尾的元素的可变列表。
-func (s *slice[T]) Push(elements ...T) {
+func (s *list[T]) Push(elements ...T) {
 	s.Slice = append(s.Slice, elements...)
 }
 
@@ -70,7 +49,7 @@ func (s *slice[T]) Push(elements ...T) {
 //
 // 参数：
 //   - elements：要插入到切片开头的元素的可变列表。
-func (s *slice[T]) Shift(elements ...T) {
+func (s *list[T]) Shift(elements ...T) {
 	result := make([]T, len(elements), s.Length+len(elements))
 	copy(result, elements)
 	s.Slice = append(result, s.Slice...)

@@ -3,24 +3,19 @@ package goList
 
 import "errors"
 
-type slice[T any] struct {
+type list[T any] struct {
 	Slice  []T
 	Length int
 	zero   T
 }
 
-//type stack[T any] struct {
-//	items []T
-//	zero  T
-//}
-
 // New 创建并返回一个新的 slice 实例。
 // 如果传入一个正整数作为唯一参数，则返回一个具有预设容量的空切片。
 // 如果传入多个元素，则这些元素将被添加到新的切片中。
-func New[T any](elements ...T) *slice[T] {
+func New[T any](elements ...T) *list[T] {
 	if len(elements) == 1 {
 		if value, ok := any(elements[0]).(int); ok && value > 0 {
-			return &slice[T]{
+			return &list[T]{
 				Slice:  make([]T, 0, value),
 				Length: value,
 			}
@@ -28,14 +23,14 @@ func New[T any](elements ...T) *slice[T] {
 	}
 	result := append([]T{}, elements...)
 
-	return &slice[T]{
+	return &list[T]{
 		Slice:  result,
 		Length: len(result),
 	}
 }
 
 // 判断切片数组是否为空
-func (s *slice[T]) isNullS() bool {
+func (s *list[T]) isNullS() bool {
 	if s.Length == 0 {
 		return false
 	}
@@ -44,7 +39,7 @@ func (s *slice[T]) isNullS() bool {
 }
 
 // 检查索引是否处于合法范围内
-func indexCheck[T any](s *slice[T], index int) (int, error) {
+func indexCheck[T any](s *list[T], index int) (int, error) {
 	if s == nil {
 		return -1, errors.New("slice is nil")
 	}
@@ -60,7 +55,7 @@ func indexCheck[T any](s *slice[T], index int) (int, error) {
 }
 
 // 将索引值转换为有效范围内的索引值
-func (s *slice[T]) indexCon(index int) int {
+func (s *list[T]) indexCon(index int) int {
 	if index < 0 {
 		index += s.Length
 		if index < 0 {
@@ -72,28 +67,3 @@ func (s *slice[T]) indexCon(index int) int {
 
 	return index
 }
-
-//
-//func stackNew[T any]() *stack[T] {
-//	return &stack[T]{
-//		items: make([]T, 0),
-//	}
-//}
-//
-//func (st *stack[T]) stackIsEmpty() bool {
-//	return len(st.items) == 0
-//}
-//
-//func (st *stack[T]) stackAdd(item T) {
-//	st.items = append(st.items, item)
-//}
-//
-//func (st *stack[T]) stackDel() (T, error) {
-//	if st.stackIsEmpty() {
-//		return st.zero, errors.New("stack is empty")
-//	}
-//
-//	item := st.items[len(st.items)-1]
-//	st.items = st.items[:len(st.items)-1]
-//	return item, nil
-//}

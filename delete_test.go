@@ -7,7 +7,7 @@ import (
 
 func TestDelete(t *testing.T) {
 	// 测试删除单个元素
-	s := &slice[int]{Slice: []int{1, 2, 3, 4, 5}, Length: 5}
+	s := &list[int]{Slice: []int{1, 2, 3, 4, 5}, Length: 5}
 	deleted, err := s.Delete(1)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
@@ -22,7 +22,7 @@ func TestDelete(t *testing.T) {
 	}
 
 	// 测试删除多个元素
-	s = &slice[int]{Slice: []int{1, 2, 3, 4, 5}, Length: 5}
+	s = &list[int]{Slice: []int{1, 2, 3, 4, 5}, Length: 5}
 	deleted, err = s.Delete(1, 2)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
@@ -38,7 +38,7 @@ func TestDelete(t *testing.T) {
 }
 
 func TestPop(t *testing.T) {
-	s := &slice[int]{Slice: []int{1, 2, 3, 4, 5}, Length: 5}
+	s := &list[int]{Slice: []int{1, 2, 3, 4, 5}, Length: 5}
 	popped, _ := s.Pop()
 	expected := 5
 	if popped != expected {
@@ -51,7 +51,7 @@ func TestPop(t *testing.T) {
 }
 
 func TestUnShift(t *testing.T) {
-	s := &slice[int]{Slice: []int{1, 2, 3, 4, 5}, Length: 5}
+	s := &list[int]{Slice: []int{1, 2, 3, 4, 5}, Length: 5}
 	unsifted, _ := s.UnShift()
 	expected := 1
 	if unsifted != expected {

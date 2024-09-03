@@ -6,7 +6,7 @@ import (
 )
 
 func TestSlice_Add(t *testing.T) {
-	s := &slice[int]{
+	s := &list[int]{
 		Slice:  []int{1, 2, 4},
 		Length: 3,
 	}
@@ -44,7 +44,7 @@ func TestSlice_Add(t *testing.T) {
 }
 
 func TestSlice_AddAll(t *testing.T) {
-	s := &slice[int]{
+	s := &list[int]{
 		Slice:  []int{1, 2, 5},
 		Length: 3,
 	}

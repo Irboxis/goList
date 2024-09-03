@@ -10,7 +10,7 @@ import "errors"
 //
 // 返回：
 //   - 一个包含已删除元素的切片，以及可能的错误。
-func (s *slice[T]) Delete(start int, count ...int) ([]T, error) {
+func (s *list[T]) Delete(start int, count ...int) ([]T, error) {
 	// delete an element by default
 	numToDelete := 1
 	if len(count) > 1 {
@@ -44,7 +44,7 @@ func (s *slice[T]) Delete(start int, count ...int) ([]T, error) {
 //
 // 返回：
 //   - 被删除的元素。
-func (s *slice[T]) Pop() (T, error) {
+func (s *list[T]) Pop() (T, error) {
 	if !s.isNullS() {
 		return s.zero, errors.New("there are no elements in the slice")
 	}
@@ -60,7 +60,7 @@ func (s *slice[T]) Pop() (T, error) {
 //
 // 返回：
 //   - 被删除的元素。
-func (s *slice[T]) UnShift() (T, error) {
+func (s *list[T]) UnShift() (T, error) {
 	if !s.isNullS() {
 		return s.zero, errors.New("there are no elements in the slice")
 	}

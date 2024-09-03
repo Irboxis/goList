@@ -18,7 +18,7 @@ import (
 // 返回：
 //   - 一个新切片，包含所有满足回调函数条件的元素。
 //   - 如果切片为空，返回 `nil` 和错误。
-func (s *slice[T]) Map(callback func(elem T, index int, slice []T) (bool, T)) ([]T, error) {
+func (s *list[T]) Map(callback func(elem T, index int, slice []T) (bool, T)) ([]T, error) {
 	if !s.isNullS() {
 		return nil, errors.New("currently an empty slice")
 	}
@@ -43,7 +43,7 @@ func (s *slice[T]) Map(callback func(elem T, index int, slice []T) (bool, T)) ([
 //
 // 返回:
 //   - 包含合并后结果的新切片。
-func (s *slice[T]) Merge(list ...[]T) []T {
+func (s *list[T]) Merge(list ...[]T) []T {
 	totalLength := s.Length
 	for _, l := range list {
 		totalLength += len(l)
@@ -69,7 +69,7 @@ func (s *slice[T]) Merge(list ...[]T) []T {
 //
 // 返回：
 //   - bool：如果所有元素都满足回调函数的条件，则返回 true；否则返回 false。
-func (s *slice[T]) Every(callback func(elem T, index int, slice []T) bool) bool {
+func (s *list[T]) Every(callback func(elem T, index int, slice []T) bool) bool {
 	for i, v := range s.Slice {
 		if !callback(v, i, s.Slice) {
 			return false
@@ -86,7 +86,7 @@ func (s *slice[T]) Every(callback func(elem T, index int, slice []T) bool) bool 
 //   - scope: 可选参数，指定填充的起始和结束索引范围；支持负索引模式。
 //     1. 若为一个参数，则该参数为起始索引，结束索引默认为切片长度。
 //     2. 若为两个参数，则第一个参数为起始索引，第二个参数为结束索引。
-func (s *slice[T]) Fill(element T, scope ...int) error {
+func (s *list[T]) Fill(element T, scope ...int) error {
 	if !s.isNullS() {
 		return errors.New("currently an empty slice")
 	}
@@ -121,7 +121,7 @@ func (s *slice[T]) Fill(element T, scope ...int) error {
 // 返回:
 //   - 包含所有满足条件元素的切片。
 //   - 如果切片为空，则返回 nil 和一个错误。
-func (s *slice[T]) Filter(callback func(elem T, index int, slice []T) bool) ([]T, error) {
+func (s *list[T]) Filter(callback func(elem T, index int, slice []T) bool) ([]T, error) {
 	if !s.isNullS() {
 		return nil, errors.New("currently an empty slice")
 	}
@@ -136,7 +136,15 @@ func (s *slice[T]) Filter(callback func(elem T, index int, slice []T) bool) ([]T
 	return result, nil
 }
 
-func (s *slice[T]) Flat(deep ...int) ([]T, error) {
+// Flat 方法实现对嵌套切片的扁平化操作。
+//
+// 参数:
+//   - deep: (可选) 展平深度，默认为 1，若需要全部扁平化，则深度为 -1。
+//
+// 返回值:
+//   - []T: 扁平化后的切片。
+//   - error: 如果切片为空或 deep 参数无效，则返回错误。
+func (s *list[T]) Flat(deep ...int) ([]T, error) {
 	if !s.isNullS() {
 		return nil, errors.New("currently an empty slice")
 	}
@@ -173,6 +181,35 @@ func (s *slice[T]) Flat(deep ...int) ([]T, error) {
 			}
 		} else {
 			result = append(result, current.(T))
+		}
+	}
+
+	return result, nil
+}
+
+// Join 将列表中的所有元素连接成一个字符串，并使用指定的分隔符分隔每个元素。
+// 如果列表为空，则返回一个空字符串。
+// 参数:
+//   - separator: 可选的字符串参数，用作连接元素的分隔符。如果未提供分隔符，默认使用 ","。
+//
+// 返回值:
+//   - string: 连接后的字符串。
+func (s *list[T]) Join(separator ...string) (string, error) {
+	result := ""
+	sep := ","
+	if s.Length == 0 {
+		return result, nil
+	}
+	if len(separator) == 1 {
+		sep = separator[0]
+	} else if len(separator) > 1 {
+		return "", errors.New("unexpected parameter, separator can only accept a string as a connector")
+	}
+
+	for index, val := range s.Slice {
+		result += fmt.Sprintf("%v", val)
+		if index < s.Length-1 {
+			result += sep
 		}
 	}
 

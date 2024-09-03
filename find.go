@@ -13,7 +13,7 @@ import (
 // 返回：
 //   - 如果找到匹配的元素，返回其在切片中的索引。
 //   - 如果未找到匹配的元素，返回 -1 和错误，指示元素未找到。
-func (s *slice[T]) IndexOf(element T) (int, error) {
+func (s *list[T]) IndexOf(element T) (int, error) {
 	if !s.isNullS() {
 		return -1, errors.New("currently an empty slice")
 	}
@@ -37,7 +37,7 @@ func (s *slice[T]) IndexOf(element T) (int, error) {
 // 返回：
 //   - 在指定索引处的元素。
 //   - 如果切片为空或元素未找到，则返回切片类型的零值和相应的错误
-func (s *slice[T]) ValueOf(index int) (T, error) {
+func (s *list[T]) ValueOf(index int) (T, error) {
 	if !s.isNullS() {
 		return s.zero, errors.New("currently an empty slice")
 	}
@@ -60,7 +60,7 @@ func (s *slice[T]) ValueOf(index int) (T, error) {
 // 返回：
 //   - 满足回调条件的第一个元素，或者如果切片为空或没有元素符合条件，则返回元素类型的零值。
 //   - 错误，指示切片是否为空或未找到匹配元素。
-func (s *slice[T]) Find(callback func(elem T, index int, slice []T) bool) (T, error) {
+func (s *list[T]) Find(callback func(elem T, index int, slice []T) bool) (T, error) {
 	if !s.isNullS() {
 		return s.zero, errors.New("currently an empty slice")
 	}
@@ -83,7 +83,7 @@ func (s *slice[T]) Find(callback func(elem T, index int, slice []T) bool) (T, er
 // 返回:
 //   - bool: 如果找到了该元素，则返回 true，否则返回 false。
 //   - error: 如果起始索引超出范围或提供了多个起始值，则返回错误信息。
-func (s *slice[T]) Includes(element T, start ...int) (bool, error) {
+func (s *list[T]) Includes(element T, start ...int) (bool, error) {
 	if !s.isNullS() {
 		return false, errors.New("currently an empty slice")
 	}

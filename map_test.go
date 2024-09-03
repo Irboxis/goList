@@ -8,37 +8,37 @@ import (
 func TestMerge(t *testing.T) {
 	tests := []struct {
 		name     string
-		slice    *slice[int] // 被测试的切片
-		toMerge  [][]int     // 要合并的多个切片
-		expected []int       // 期望的合并结果
+		slice    *list[int] // 被测试的切片
+		toMerge  [][]int    // 要合并的多个切片
+		expected []int      // 期望的合并结果
 	}{
 		{
 			name:     "Merge with multiple non-empty slices",
-			slice:    &slice[int]{Slice: []int{1, 2, 3}, Length: 3},
+			slice:    &list[int]{Slice: []int{1, 2, 3}, Length: 3},
 			toMerge:  [][]int{{4, 5}, {6, 7, 8}},
 			expected: []int{1, 2, 3, 4, 5, 6, 7, 8},
 		},
 		{
 			name:     "Merge with empty slice",
-			slice:    &slice[int]{Slice: []int{}, Length: 0},
+			slice:    &list[int]{Slice: []int{}, Length: 0},
 			toMerge:  [][]int{{1, 2, 3}},
 			expected: []int{1, 2, 3},
 		},
 		{
 			name:     "Merge with no additional slices",
-			slice:    &slice[int]{Slice: []int{1, 2, 3}, Length: 3},
+			slice:    &list[int]{Slice: []int{1, 2, 3}, Length: 3},
 			toMerge:  nil,
 			expected: []int{1, 2, 3},
 		},
 		{
 			name:     "Merge with empty input slices",
-			slice:    &slice[int]{Slice: []int{1, 2}, Length: 2},
+			slice:    &list[int]{Slice: []int{1, 2}, Length: 2},
 			toMerge:  [][]int{{}, {}},
 			expected: []int{1, 2},
 		},
 		{
 			name:     "Merge with both empty slice and input slices",
-			slice:    &slice[int]{Slice: []int{}, Length: 0},
+			slice:    &list[int]{Slice: []int{}, Length: 0},
 			toMerge:  [][]int{{}, {}},
 			expected: []int{},
 		},
@@ -118,5 +118,45 @@ func TestSliceFlat(t *testing.T) {
 				t.Errorf("Flat() = %v, expected %v", result, tt.expected)
 			}
 		})
+	}
+}
+
+func TestJoin(t *testing.T) {
+	// 测试整数列表
+	intList := list[int]{Slice: []int{1, 2, 3}, Length: 3}
+	result, err := intList.Join()
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
+	expected := "1,2,3"
+	if result != expected {
+		t.Errorf("Expected '%v', got '%v'", expected, result)
+	}
+
+	// 测试空列表
+	emptyList := list[int]{Slice: []int{}, Length: 0}
+	result, err = emptyList.Join()
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
+	expected = ""
+	if result != expected {
+		t.Errorf("Expected '%v', got '%v'", expected, result)
+	}
+
+	// 测试自定义分隔符
+	result, err = intList.Join(" | ")
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
+	expected = "1 | 2 | 3"
+	if result != expected {
+		t.Errorf("Expected '%v', got '%v'", expected, result)
+	}
+
+	// 测试多个分隔符导致的错误
+	_, err = intList.Join("-", ":")
+	if err == nil {
+		t.Error("Expected an error for multiple separators, but got none")
 	}
 }
